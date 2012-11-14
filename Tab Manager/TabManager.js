@@ -1,8 +1,8 @@
 function TabManager(){
 	var This = Div();
-	
-	
-	
+
+	var console = chrome.extension.getBackgroundPage().console
+
 	This.Dragging = false;
 	This.LastClicked = null;
 	This.Restart = function(){
@@ -74,11 +74,59 @@ function TabManager(){
 				var t = [];
 				for(var i = 0; i < tabs.length; i++){
 					t.push(tabs[i].Tab);
-				}							
-				chrome.extension.sendRequest({action:"new",tabs:t},function(){
-					This.Restart();
-				});
+				}
+				if (t.length == 1) {
+					//console.log(t[0]);
+					chrome.windows.update(t[0].windowId,{focused:true});
+					chrome.tabs.update(t[0].id,{selected:true});
+					This.restart();
+				}
+				else {
+					chrome.extension.sendRequest({action:"new",tabs:t},function(){
+						This.Restart();
+					});
+				}
 			}
+			// direction: (up|down)
+			function selectTab(direction) {
+				var tabs = This.getElementsByClassName("tab");
+				var selectedIndices = [];
+				var selectedIndex;
+				for(var i = 0; i < tabs.length; i++) {
+					var classes = tabs[i].className;
+					var selected = classes.indexOf("selected");
+					if (selected >= 0) {
+						selectedIndices.push(i);
+					}
+					tabs[i].removeClass("selected");
+				}
+				if (direction == "up") {
+					selectedIndex = selectedIndices.shift() - 1;
+					if (selectedIndex < 0) {
+						selectedIndex = tabs.length - 1;
+					}
+				}
+				else {
+					selectedIndex = (selectedIndices.pop() + 1) % tabs.length;
+				}
+				console.log("selected index", selectedIndex)
+				var selected = tabs[selectedIndex];
+				selected.addClass("selected");
+				selected.scrollIntoView(true);
+			}
+			// TODO: add scroll to view, fix and persist search field at bottom of popup
+			function selectTabsSearch() {
+				var tabs = This.getElementsByClassName("tab");
+				for(var i = 0; i < tabs.length; i++){
+					var tab = tabs[i];
+					if((tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
+						tab.addClass("selected");
+					}else{
+						tab.removeClass("selected");
+					}
+				}
+			}
+
 			addwindow.on("click",addWindow);
 			pintabs.on("click",function(){
 				var tabs = This.getElementsByClassName("tab selected");
@@ -95,23 +143,28 @@ function TabManager(){
 					});
 				}
 			});
-			
-			search.on("keyup",function(){
-				var tabs = This.getElementsByClassName("tab");
-				for(var i = 0; i < tabs.length; i++){
-					var tab = tabs[i];
-					if((tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
-						tab.addClass("selected");
-					}else{
-						tab.removeClass("selected");
-					}
+			search.on("keyup",function(e){
+				switch (e.keyCode) {
+					case 38: // up
+					case 40: // down
+						break;
+					default:
+						selectTabsSearch();
 				}
 			});
 			search.on("keydown",function(e){
 				console.log(e.keyCode);
-				if(e.keyCode == 13){
-					addWindow();
-				}					
+				switch (e.keyCode) {
+					case 13: // enter
+						e.preventDefault();
+						addWindow();
+					case 38: // up
+						selectTab("up");
+						break;
+					case 40: // down
+						selectTab("down");
+						break;
+				}
 			});
 			
 			layout.on("click",function(){

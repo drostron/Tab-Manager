@@ -69,19 +69,18 @@ function TabManager(){
 					});
 				}
 			});
-			function addWindow(){
+			function addWindow(shiftKey){
 				var tabs = This.getElementsByClassName("tab selected");
 				var t = [];
 				for(var i = 0; i < tabs.length; i++){
 					t.push(tabs[i].Tab);
 				}
-				if (t.length == 1) {
-					//console.log(t[0]);
+				if (t.length == 1 && !shiftKey) {
 					chrome.windows.update(t[0].windowId,{focused:true});
 					chrome.tabs.update(t[0].id,{selected:true});
 					This.restart();
 				}
-				else {
+				else if(t.length > 0) {
 					chrome.extension.sendRequest({action:"new",tabs:t},function(){
 						This.Restart();
 					});
@@ -100,6 +99,9 @@ function TabManager(){
 					}
 					tabs[i].removeClass("selected");
 				}
+				if (selectedIndices.length <= 0) {
+					selectedIndices = [-1];
+				}
 				if (direction == "up") {
 					selectedIndex = selectedIndices.shift() - 1;
 					if (selectedIndex < 0) {
@@ -109,7 +111,6 @@ function TabManager(){
 				else {
 					selectedIndex = (selectedIndices.pop() + 1) % tabs.length;
 				}
-				console.log("selected index", selectedIndex)
 				var selected = tabs[selectedIndex];
 				selected.addClass("selected");
 				selected.scrollIntoView(true);
@@ -119,7 +120,7 @@ function TabManager(){
 				var tabs = This.getElementsByClassName("tab");
 				for(var i = 0; i < tabs.length; i++){
 					var tab = tabs[i];
-					if((tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
+					if(search.value && (tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
 						tab.addClass("selected");
 					}else{
 						tab.removeClass("selected");
@@ -153,11 +154,10 @@ function TabManager(){
 				}
 			});
 			search.on("keydown",function(e){
-				console.log(e.keyCode);
 				switch (e.keyCode) {
 					case 13: // enter
 						e.preventDefault();
-						addWindow();
+						addWindow(e.shiftKey);
 					case 38: // up
 						selectTab("up");
 						break;

@@ -87,7 +87,7 @@ function TabManager(){
 				}
 			}
 			// direction: (up|down)
-			function selectTab(direction) {
+			function selectTab(direction, shiftKey) {
 				var tabs = This.getElementsByClassName("tab");
 				var selectedIndices = [];
 				var selectedIndex;
@@ -97,19 +97,21 @@ function TabManager(){
 					if (selected >= 0) {
 						selectedIndices.push(i);
 					}
-					tabs[i].removeClass("selected");
+					if (!shiftKey) {
+						tabs[i].removeClass("selected");
+					}
 				}
 				if (selectedIndices.length <= 0) {
 					selectedIndices = [-1];
 				}
 				if (direction == "up") {
-					selectedIndex = selectedIndices.shift() - 1;
+					selectedIndex = selectedIndices[0] - 1;
 					if (selectedIndex < 0) {
 						selectedIndex = tabs.length - 1;
 					}
 				}
 				else {
-					selectedIndex = (selectedIndices.pop() + 1) % tabs.length;
+					selectedIndex = (selectedIndices[selectedIndices.length - 1] + 1) % tabs.length;
 				}
 				var selected = tabs[selectedIndex];
 				selected.addClass("selected");
@@ -148,6 +150,7 @@ function TabManager(){
 				switch (e.keyCode) {
 					case 38: // up
 					case 40: // down
+					case 16: // shift
 						break;
 					default:
 						selectTabsSearch();
@@ -159,10 +162,10 @@ function TabManager(){
 						e.preventDefault();
 						addWindow(e.shiftKey);
 					case 38: // up
-						selectTab("up");
+						selectTab("up", e.shiftKey);
 						break;
 					case 40: // down
-						selectTab("down");
+						selectTab("down", e.shiftKey);
 						break;
 				}
 			});

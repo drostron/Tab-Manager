@@ -122,7 +122,7 @@ function TabManager(){
 				var tabs = This.getElementsByClassName("tab");
 				for(var i = 0; i < tabs.length; i++){
 					var tab = tabs[i];
-					if(search.value && (tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
+					if(search.value && (tab.Tab.title+'\n'+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
 						tab.addClass("selected");
 					}else{
 						tab.removeClass("selected");

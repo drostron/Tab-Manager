@@ -120,9 +120,13 @@ function TabManager(){
 			// TODO: add scroll to view, fix and persist search field at bottom of popup
 			function selectTabsSearch() {
 				var tabs = This.getElementsByClassName("tab");
+				var search_regex = null;
+				if(search.value) {
+					search_regex = new RegExp(search.value,"i");
+				}
 				for(var i = 0; i < tabs.length; i++){
 					var tab = tabs[i];
-					if(search.value && (tab.Tab.title+'\n'+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
+					if(search_regex && (search_regex.test(tab.Tab.title) || search_regex.test(tab.Tab.url))){
 						tab.addClass("selected");
 					}else{
 						tab.removeClass("selected");

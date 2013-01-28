@@ -16,7 +16,7 @@ function TabManager(){
 			for(var i = 0; i < windows.length; i++){
 				This.appendChild(Window(windows[i],This));
 			}
-			
+
 			if(This.Layout == "blocks"){
 				var wins = This.getElementsByClassName("window");
 				var highest = 0;
@@ -31,7 +31,7 @@ function TabManager(){
 					wins[i].style.width = "auto";
 				}
 			}
-			
+
 			var addwindow;
 			var deletetabs;
 			var pintabs;
@@ -43,13 +43,13 @@ function TabManager(){
 					layout = Div("icon windowaction "+This.Layout),
 					deletetabs = Div("icon windowaction trash"),
 					pintabs = Div("icon windowaction pin"),
-					addwindow = Div("icon windowaction new")					
+					addwindow = Div("icon windowaction new")
 				)
 			);
-			
+
 			search.focus();
 			search.select();
-			
+
 			deletetabs.on("click",function(){
 				var tabs = This.getElementsByClassName("tab selected");
 				if(tabs.length){
@@ -120,9 +120,13 @@ function TabManager(){
 			// TODO: add scroll to view, fix and persist search field at bottom of popup
 			function selectTabsSearch() {
 				var tabs = This.getElementsByClassName("tab");
+				var search_regex = null;
+				if(search.value) {
+					search_regex = new RegExp(search.value,"i");
+				}
 				for(var i = 0; i < tabs.length; i++){
 					var tab = tabs[i];
-					if(search.value && (tab.Tab.title+tab.Tab.url).toLowerCase().indexOf(search.value.toLowerCase()) >= 0){
+					if(search_regex && (search_regex.test(tab.Tab.title) || search_regex.test(tab.Tab.url))){
 						tab.addClass("selected");
 					}else{
 						tab.removeClass("selected");
@@ -169,7 +173,7 @@ function TabManager(){
 						break;
 				}
 			});
-			
+
 			layout.on("click",function(){
 				if(This.Layout == "blocks"){
 					localStorage["layout"] = "horizontal";
@@ -180,9 +184,9 @@ function TabManager(){
 				}
 				This.Restart();
 			});
-		});					
+		});
 	}
 	This.Restart();
-	
+
 	return This;
 }

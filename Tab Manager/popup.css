@@ -50,14 +50,15 @@ body{
 	cursor:default;
 }
 .icon.incognito{
-	border:1px solid #ff0000;
+	border-color:#ff0000;
 }
 .icon:hover{
 	border-width:2px;
 	padding:0px;
 }
 .tab.selected{
-	border:2px solid #3B5686;
+	border-width:2px;
+	border-color:#3B5686;
 	padding:0px;
 }
 .tab{
@@ -69,6 +70,11 @@ body{
 .tab.full{
 	width:340px;
 	background-position:2px center;
+	padding-left:20px;
+}
+.tab.full.selected, .tab.full:hover{
+	background-position:1px center;
+	padding-left:19px;
 }
 .tab.full > .tabtitle{
 	width:310px;

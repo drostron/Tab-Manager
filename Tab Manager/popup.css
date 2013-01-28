@@ -47,7 +47,7 @@ body{
 	font-family:verdana;
 	font-size:12px;
 	user-select:none;
-	cursor:arrow;
+	cursor:default;
 }
 .icon.incognito{
 	border:1px solid #ff0000;

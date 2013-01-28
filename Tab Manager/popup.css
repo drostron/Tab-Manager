@@ -47,7 +47,7 @@ body{
 	font-family:verdana;
 	font-size:12px;
 	user-select:none;
-	cursor:arrow;			
+	cursor:arrow;
 }
 .icon.incognito{
 	border:1px solid #ff0000;
@@ -78,7 +78,7 @@ body{
 }
 .tab:first-child, .newliner + .icon{
 	margin-left:0px;
-}		
+}
 .windowaction{
 	float:right;
 	margin-right:2px;
@@ -113,7 +113,7 @@ body{
 	height:20px;
 	background-color:#000000;
 	margin-top:-2px;
-	
+
 }
 .tab.left > .limiter{
 	margin-left:-4px;

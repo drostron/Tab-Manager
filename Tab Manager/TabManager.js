@@ -16,7 +16,7 @@ function TabManager(){
 			for(var i = 0; i < windows.length; i++){
 				This.appendChild(Window(windows[i],This));
 			}
-			
+
 			if(This.Layout == "blocks"){
 				var wins = This.getElementsByClassName("window");
 				var highest = 0;
@@ -31,7 +31,7 @@ function TabManager(){
 					wins[i].style.width = "auto";
 				}
 			}
-			
+
 			var addwindow;
 			var deletetabs;
 			var pintabs;
@@ -43,13 +43,13 @@ function TabManager(){
 					layout = Div("icon windowaction "+This.Layout),
 					deletetabs = Div("icon windowaction trash"),
 					pintabs = Div("icon windowaction pin"),
-					addwindow = Div("icon windowaction new")					
+					addwindow = Div("icon windowaction new")
 				)
 			);
-			
+
 			search.focus();
 			search.select();
-			
+
 			deletetabs.on("click",function(){
 				var tabs = This.getElementsByClassName("tab selected");
 				if(tabs.length){
@@ -169,7 +169,7 @@ function TabManager(){
 						break;
 				}
 			});
-			
+
 			layout.on("click",function(){
 				if(This.Layout == "blocks"){
 					localStorage["layout"] = "horizontal";
@@ -180,9 +180,9 @@ function TabManager(){
 				}
 				This.Restart();
 			});
-		});					
+		});
 	}
 	This.Restart();
-	
+
 	return This;
 }

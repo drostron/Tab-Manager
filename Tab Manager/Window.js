@@ -1,9 +1,9 @@
 function Window(w,t){
-	var This = Div("window");				
+	var This = Div("window");
 	This.TabManager = t;
 	This.ID = w.id;
 	This.Window = w;
-	
+
 	var addtab = Div("icon add");
 	var closewindow = Div("icon close");
 	if(t.Layout == "blocks"){
@@ -12,8 +12,8 @@ function Window(w,t){
 		addtab.addClass("windowaction");
 		closewindow.addClass("windowaction");
 	}
-	
-		
+
+
 	var tabsperrow = 15;
 	var tabs = [];
 	for(var i = 0; i < w.tabs.length; i++){
@@ -25,30 +25,30 @@ function Window(w,t){
 	}
 	tabs.push(closewindow);
 	tabs.push(addtab);
-	
+
 	if(t.Layout == "blocks"){
 		for(var i = 1; i*i < tabs.length; i++);
 		tabsperrow = i;
 	}else if(t.Layout == "vertical"){
 		tabsperrow = 1;
 	}
-	
-	
-	
-	for(var j = 0; j < tabs.length; j++){	
+
+
+
+	for(var j = 0; j < tabs.length; j++){
 		if(j % tabsperrow == 0 && j && (j < tabs.length-1 || t.Layout == "blocks")){
 			This.appendChild(Div("newliner"));
-		}				
+		}
 		This.appendChild(tabs[j]);
-		
+
 	}
-	
+
 	addtab.on("click",function(){
 		chrome.tabs.create({windowId:w.id,},function(){
 			This.TabManager.Restart();
 		});
 	});
-	
+
 	closewindow.on("click",function(){
 		chrome.windows.remove(w.id,function(){
 			This.TabManager.Restart();
